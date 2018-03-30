@@ -1,0 +1,10 @@
+{
+    "redis":{
+        "server_addr":":6379",
+	"password":"",
+	"max_active":10,
+	"max_idle":10,
+	"idle_time_out":60,
+	"wait":true
+    }
+}

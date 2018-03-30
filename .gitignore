@@ -8,7 +8,6 @@
 !*.go
 !*.json
 !.travis.yml
-config.json
 # For HTML
 !*.html
 !*.js
