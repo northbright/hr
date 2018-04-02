@@ -1,0 +1,29 @@
+language: go
+
+go:
+  - 1.8
+  - 1.9
+  - 1.10
+  - tip
+
+services:
+  - redis-server
+
+before_install:
+
+install:
+ - go get github.com/garyburd/redigo/redis
+ - go get github.com/northbright/csvhelper
+ - go get github.com/northbright/redishelper
+
+before_script:
+
+script:
+  - go test -v ./...
+
+  # Employee
+  - cd employee/tools/update-employees/
+  - go build
+  - ./update-employees -a='127.0.0.1:6379' -p='' -f='files/original.csv'
+  - ./update-employees -a='127.0.0.1:6379' -p='' -f='files/update.csv'
+  - cd ../../
