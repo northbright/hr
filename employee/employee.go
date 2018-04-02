@@ -206,15 +206,6 @@ func Set(pool *redis.Pool, ID string, e *Employee) error {
 		mobilePhoneNumChanged bool
 	)
 
-	// Check if updated employee already exists.
-	exists, _, err := Exists(pool, e)
-	if err != nil {
-		return err
-	}
-	if exists {
-		return ErrAlreadyExists
-	}
-
 	// Get old employee data by ID.
 	oldEmplyee, err := Get(pool, ID)
 	if err != nil {
