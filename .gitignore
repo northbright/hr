@@ -15,3 +15,5 @@
 !*.jpg
 !*.png
 !*.gif
+# For CSV
+!*.csv
