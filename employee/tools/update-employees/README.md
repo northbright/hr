@@ -38,7 +38,7 @@ update-employees is a program which read and parse employee data in given CSV fi
 
 * Commands
 
-          update-employees -a='127.0.0.1:6379' -p='' -f='files/employees.csv'
+          update-employees -a='127.0.0.1:6379' -p='' -f='files/files/original.csv'
           update-employees -a='127.0.0.1:6379' -p='' -f='files/update.csv'
 
 
