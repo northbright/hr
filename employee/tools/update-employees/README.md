@@ -14,8 +14,16 @@ update-employees is a program which read and parse employee data in given CSV fi
     usage:
         update-employees -a=<Redis server address> -p=<Redis password> -f=<csv file>
 
-    e.g.
-        update-employees -a='127.0.0.1:6379' -p='' -f='employees.csv'
+#### Example
+
+* [`files/original.csv`](files/original.csv) contains the original employee data.
+* [`files/update.csv`](files/update.csv) contains the updated employee data.
+  * Change `张三`'s mobile phone number from `13500000000` to `13900000000`.
+
+* Commands
+
+          update-employees -a='127.0.0.1:6379' -p='' -f='files/employees.csv'
+          update-employees -a='127.0.0.1:6379' -p='' -f='files/update.csv'
 
 
 
