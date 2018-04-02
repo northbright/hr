@@ -52,28 +52,28 @@ func GetIDByMobilePhoneNum(pool *redis.Pool, mobilePhoneNum string) (string, err
 	}
 }
 
-func Exists(pool *redis.Pool, e *Employee) (bool, error) {
+func Exists(pool *redis.Pool, e *Employee) (bool, string, error) {
 	ID, err := GetIDByIDCardNo(pool, e.IDCardNo)
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 	if ID != "" {
-		return true, nil
+		return true, ID, nil
 	}
 
 	ID, err = GetIDByMobilePhoneNum(pool, e.MobilePhoneNum)
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 	if ID != "" {
-		return true, nil
+		return true, ID, nil
 	}
 
-	return false, nil
+	return false, "", nil
 }
 
 func Add(pool *redis.Pool, e *Employee) (string, error) {
-	exists, err := Exists(pool, e)
+	exists, _, err := Exists(pool, e)
 	if err != nil {
 		return "", err
 	}
@@ -207,7 +207,7 @@ func Set(pool *redis.Pool, ID string, e *Employee) error {
 	)
 
 	// Check if updated employee already exists.
-	exists, err := Exists(pool, e)
+	exists, _, err := Exists(pool, e)
 	if err != nil {
 		return err
 	}
