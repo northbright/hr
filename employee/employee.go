@@ -16,9 +16,33 @@ type Employee struct {
 }
 
 var (
-	ErrNotExist      = fmt.Errorf("employee does not exist")
-	ErrAlreadyExists = fmt.Errorf("employee already exists")
+	ErrInvalidName           = fmt.Errorf("invalid name")
+	ErrInvalidSex            = fmt.Errorf("invalid sex")
+	ErrInvalidIDCardNo       = fmt.Errorf("invalid ID card number")
+	ErrInvalidMobilePhoneNum = fmt.Errorf("invalid mobile phone number")
+	ErrNotExist              = fmt.Errorf("employee does not exist")
+	ErrAlreadyExists         = fmt.Errorf("employee already exists")
 )
+
+func (e *Employee) Valid() error {
+	if e.Name == "" {
+		return ErrInvalidName
+	}
+
+	if e.Sex == "" {
+		return ErrInvalidSex
+	}
+
+	if e.IDCardNo == "" {
+		return ErrInvalidIDCardNo
+	}
+
+	if e.MobilePhoneNum == "" {
+		return ErrInvalidMobilePhoneNum
+	}
+
+	return nil
+}
 
 func GetIDByIDCardNo(pool *redis.Pool, IDCardNo string) (string, error) {
 	conn := pool.Get()
@@ -73,6 +97,11 @@ func Exists(pool *redis.Pool, e *Employee) (bool, string, error) {
 }
 
 func Add(pool *redis.Pool, e *Employee) (string, error) {
+	err := e.Valid()
+	if err != nil {
+		return "", err
+	}
+
 	exists, _, err := Exists(pool, e)
 	if err != nil {
 		return "", err
@@ -205,6 +234,11 @@ func Set(pool *redis.Pool, ID string, e *Employee) error {
 		IDCardNoChanged       bool
 		mobilePhoneNumChanged bool
 	)
+
+	err := e.Valid()
+	if err != nil {
+		return err
+	}
 
 	// Get old employee data by ID.
 	oldEmplyee, err := Get(pool, ID)
