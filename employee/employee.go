@@ -76,6 +76,22 @@ func GetIDByMobilePhoneNum(pool *redis.Pool, mobilePhoneNum string) (string, err
 	}
 }
 
+func GetIDsByName(pool *redis.Pool, name string) ([]string, error) {
+	conn := pool.Get()
+	defer conn.Close()
+
+	k := fmt.Sprintf("hr:employees:index:name_to_ids:%v", name)
+	IDs, err := redis.Strings(conn.Do("ZRANGE", k, 0, -1))
+	switch err {
+	case nil:
+		return IDs, nil
+	case redis.ErrNil:
+		return []string{}, nil
+	default:
+		return []string{}, err
+	}
+}
+
 func Exists(pool *redis.Pool, e *Employee) (bool, string, error) {
 	ID, err := GetIDByIDCardNo(pool, e.IDCardNo)
 	if err != nil {

@@ -78,10 +78,22 @@ func Example() {
 			MobilePhoneNum: "13777777777",
 		},
 		employee.Employee{
-			Name:           "John",
+			Name:           "王强",
 			IDCardNo:       "310104111111111111",
 			Sex:            "male",
 			MobilePhoneNum: "13333333333",
+		},
+		employee.Employee{
+			Name:           "王亮",
+			IDCardNo:       "310104555555555555",
+			Sex:            "male",
+			MobilePhoneNum: "13555555555",
+		},
+		employee.Employee{
+			Name:           "王亮",
+			IDCardNo:       "310104666666666666",
+			Sex:            "male",
+			MobilePhoneNum: "13666666666",
 		},
 	}
 
@@ -136,6 +148,23 @@ func Example() {
 		return
 	}
 	log.Printf("GetIDBMobilePhoneNum() OK.\nmobile phone num: %v\nID: %v", mobilePhoneNum, ID)
+
+	// Get employees by name.
+	name := "王亮"
+	matchedIDs, err := employee.GetIDsByName(pool, name)
+	if err != nil {
+		log.Printf("GetIDsByName() error: %v", err)
+		return
+	}
+	log.Printf("GetIDsByName(%v) OK.\nIDs: %v", name, matchedIDs)
+
+	// Search name.
+	names, err := employee.SearchName(pool, "王")
+	if err != nil {
+		log.Printf("SearchName() error: %v", err)
+		return
+	}
+	log.Printf("SearchName(%v) OK.\nmatched names: %v\n", "王", names)
 
 	// Delete employee.
 	for _, ID := range IDs {
