@@ -78,15 +78,15 @@ func main() {
 		if exists {
 			err = employee.Set(pool, ID, &e)
 			if err != nil {
-				fmt.Printf("Set() error: %v", err)
-				return
+				fmt.Printf("** Set() error: %v. e: %v\n", err, e)
+				continue
 			}
 			fmt.Printf("employee exists. ID: %v, update to %v\n", ID, e)
 		} else {
 			ID, err = employee.Add(pool, &e)
 			if err != nil {
-				fmt.Printf("Add() error: %v", err)
-				return
+				fmt.Printf("** Add() error: %v. e: %v\n", err, e)
+				continue
 			}
 			fmt.Printf("add new employee. ID: %v, %v\n", ID, e)
 		}
