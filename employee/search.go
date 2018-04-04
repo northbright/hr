@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 )
 
 func SearchName(pool *redis.Pool, name string) ([]string, error) {

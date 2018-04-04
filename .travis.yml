@@ -12,7 +12,7 @@ services:
 before_install:
 
 install:
- - go get github.com/garyburd/redigo/redis
+ - go get github.com/gomodule/redigo/redis
  - go get github.com/northbright/csvhelper
  - go get github.com/northbright/redishelper
  - go get github.com/northbright/uuid
