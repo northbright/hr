@@ -3,6 +3,7 @@ package employee
 import (
 	"fmt"
 	"time"
+	"unicode/utf8"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/northbright/uuid"
@@ -24,8 +25,16 @@ var (
 	ErrAlreadyExists         = fmt.Errorf("employee already exists")
 )
 
+func ValidName(name string) bool {
+	l := utf8.RuneCount([]byte(name))
+	if l <= 0 || l > 60 {
+		return false
+	}
+	return true
+}
+
 func (e *Employee) Valid() error {
-	if e.Name == "" {
+	if !ValidName(e.Name) {
 		return ErrInvalidName
 	}
 
