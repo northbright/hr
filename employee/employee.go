@@ -23,11 +23,13 @@ var (
 	ErrInvalidMobilePhoneNum = fmt.Errorf("invalid mobile phone number")
 	ErrNotExist              = fmt.Errorf("employee does not exist")
 	ErrAlreadyExists         = fmt.Errorf("employee already exists")
+
+	MaxLenOfName = 60
 )
 
 func ValidName(name string) bool {
 	l := utf8.RuneCount([]byte(name))
-	if l <= 0 || l > 60 {
+	if l <= 0 || l > MaxLenOfName {
 		return false
 	}
 	return true
