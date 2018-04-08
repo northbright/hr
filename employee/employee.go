@@ -24,7 +24,12 @@ var (
 	ErrNotExist              = fmt.Errorf("employee does not exist")
 	ErrAlreadyExists         = fmt.Errorf("employee already exists")
 
-	MaxLenOfName = 60
+	MaxLenOfName   = 60
+	AvailableSexes = []string{
+		"male",
+		"female",
+		"unknown",
+	}
 )
 
 func ValidName(name string) bool {
@@ -36,10 +41,12 @@ func ValidName(name string) bool {
 }
 
 func ValidSex(sex string) bool {
-	if sex != "male" && sex != "female" {
-		return false
+	for _, v := range AvailableSexes {
+		if v == sex {
+			return true
+		}
 	}
-	return true
+	return false
 }
 
 func ValidIDCardNo(IDCardNo string) bool {
