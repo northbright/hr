@@ -33,12 +33,19 @@ func ValidName(name string) bool {
 	return true
 }
 
+func ValidSex(sex string) bool {
+	if sex != "male" && sex != "female" {
+		return false
+	}
+	return true
+}
+
 func (e *Employee) Valid() error {
 	if !ValidName(e.Name) {
 		return ErrInvalidName
 	}
 
-	if e.Sex == "" {
+	if !ValidSex(e.Sex) {
 		return ErrInvalidSex
 	}
 
