@@ -47,6 +47,13 @@ func ValidIDCardNo(IDCardNo string) bool {
 	return true
 }
 
+func ValidMobilePhoneNum(num string) bool {
+	if num == "" {
+		return false
+	}
+	return true
+}
+
 func (e *Employee) Valid() error {
 	if !ValidName(e.Name) {
 		return ErrInvalidName
@@ -60,7 +67,7 @@ func (e *Employee) Valid() error {
 		return ErrInvalidIDCardNo
 	}
 
-	if e.MobilePhoneNum == "" {
+	if !ValidMobilePhoneNum(e.MobilePhoneNum) {
 		return ErrInvalidMobilePhoneNum
 	}
 
