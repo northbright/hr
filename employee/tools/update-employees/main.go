@@ -62,9 +62,21 @@ func main() {
 			continue
 		}
 
+		sex := ""
+		switch record[1] {
+		case "male", "female":
+			sex = record[1]
+		case "男":
+			sex = "male"
+		case "女":
+			sex = "female"
+		default:
+			sex = "unknown"
+		}
+
 		e := employee.Employee{
 			Name:           record[0],
-			Sex:            record[1],
+			Sex:            sex,
 			IDCardNo:       record[2],
 			MobilePhoneNum: record[3],
 		}
