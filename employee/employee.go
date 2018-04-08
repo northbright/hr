@@ -40,6 +40,13 @@ func ValidSex(sex string) bool {
 	return true
 }
 
+func ValidIDCardNo(IDCardNo string) bool {
+	if IDCardNo == "" {
+		return false
+	}
+	return true
+}
+
 func (e *Employee) Valid() error {
 	if !ValidName(e.Name) {
 		return ErrInvalidName
@@ -49,7 +56,7 @@ func (e *Employee) Valid() error {
 		return ErrInvalidSex
 	}
 
-	if e.IDCardNo == "" {
+	if !ValidIDCardNo(e.IDCardNo) {
 		return ErrInvalidIDCardNo
 	}
 
