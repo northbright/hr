@@ -296,20 +296,20 @@ func Set(pool *redis.Pool, ID string, e *Employee) error {
 	}
 
 	// Get old employee data by ID.
-	oldEmplyee, err := Get(pool, ID)
+	oldEmployee, err := Get(pool, ID)
 	if err != nil {
 		return err
 	}
 
-	if oldEmplyee.Name != e.Name {
+	if oldEmployee.Name != e.Name {
 		nameChanged = true
 	}
 
-	if oldEmplyee.IDCardNo != e.IDCardNo {
+	if oldEmployee.IDCardNo != e.IDCardNo {
 		IDCardNoChanged = true
 	}
 
-	if oldEmplyee.MobilePhoneNum != e.MobilePhoneNum {
+	if oldEmployee.MobilePhoneNum != e.MobilePhoneNum {
 		mobilePhoneNumChanged = true
 	}
 
@@ -325,18 +325,18 @@ func Set(pool *redis.Pool, ID string, e *Employee) error {
 
 	if IDCardNoChanged {
 		k = "hr:employees:index:id_card_no_to_id"
-		pipedConn.Send("HDEL", k, oldEmplyee.IDCardNo)
+		pipedConn.Send("HDEL", k, oldEmployee.IDCardNo)
 		pipedConn.Send("HSET", k, e.IDCardNo, ID)
 	}
 
 	if mobilePhoneNumChanged {
 		k = "hr:employees:index:mobile_phone_num_to_id"
-		pipedConn.Send("HDEL", k, oldEmplyee.MobilePhoneNum)
+		pipedConn.Send("HDEL", k, oldEmployee.MobilePhoneNum)
 		pipedConn.Send("HSET", k, e.MobilePhoneNum, ID)
 	}
 
 	if nameChanged {
-		k = fmt.Sprintf("hr:employees:index:name_to_ids:%v", oldEmplyee.Name)
+		k = fmt.Sprintf("hr:employees:index:name_to_ids:%v", oldEmployee.Name)
 		t, err := redis.String(conn.Do("ZSCORE", k, ID))
 		if err != nil {
 			return err
