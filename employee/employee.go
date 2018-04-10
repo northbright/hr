@@ -120,7 +120,7 @@ func GetIDsByName(pool *redis.Pool, name string) ([]string, error) {
 	defer conn.Close()
 
 	k := fmt.Sprintf("hr:employees:index:name_to_ids:%v", name)
-	IDs, err := redis.Strings(conn.Do("ZRANGE", k, 0, -1))
+	IDs, err := redis.Strings(conn.Do("ZREVRANGE", k, 0, -1))
 	switch err {
 	case nil:
 		return IDs, nil
@@ -237,7 +237,7 @@ func GetAllIDs(pool *redis.Pool) ([]string, error) {
 	defer conn.Close()
 
 	k := "hr:employees"
-	IDs, err := redis.Strings(conn.Do("ZRANGE", k, 0, -1))
+	IDs, err := redis.Strings(conn.Do("ZREVRANGE", k, 0, -1))
 	if err != nil {
 		return []string{}, err
 	}
