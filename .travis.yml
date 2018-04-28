@@ -28,9 +28,7 @@ before_script:
 script:
   - go test -v ./...
 
-  # Employee
-  - cd employee/tools/update-employees/
+  # Tools
+  - cd tools/update-employees/
   - go build
-  - ./update-employees -a='127.0.0.1:6379' -p='' -f='files/original.csv'
-  - ./update-employees -a='127.0.0.1:6379' -p='' -f='files/update.csv'
   - cd ../../
