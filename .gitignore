@@ -2,6 +2,14 @@
 *
 # Unignore all sub dirs
 !*/
+
+# Ignore frontend
+frontend/*
+# Unignore frontend/src
+!frontend/src/
+!frontend/src/*/
+
+# Unignore for these files
 !.gitignore
 !LICENSE
 !*.md
