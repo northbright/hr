@@ -1,0 +1,18 @@
+{
+    "http_server": {
+        "addr":":8000"
+    },
+    "redis": {
+        "addr":":6379",
+	"password":"",
+	"pool_max_active":100,
+	"pool_max_idle":100,
+	"pool_max_timeout":60,
+	"pool_wait":true
+    },
+    "postgresql": {
+        "host":"localhost",
+        "port":"5432",
+        "password":""
+    }
+}
