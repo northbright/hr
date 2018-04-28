@@ -8,10 +8,10 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/jmoiron/sqlx"
+	//"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/northbright/csvhelper"
-	"github.com/northbright/hr"
+	//"github.com/northbright/hr"
 )
 
 type PostgreSQLConfig struct {
