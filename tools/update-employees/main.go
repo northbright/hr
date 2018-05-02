@@ -3,7 +3,6 @@ package main
 import (
 	//"database/sql"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -11,6 +10,7 @@ import (
 	//"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/northbright/csvhelper"
+	"github.com/northbright/pathhelper"
 	//"github.com/northbright/hr"
 )
 
@@ -30,20 +30,11 @@ type Config struct {
 
 func main() {
 	var (
-		err        error
-		configFile string
-		config     Config
+		err    error
+		config Config
 	)
 
-	flag.StringVar(
-		&configFile,
-		"c",
-		"config.json",
-		"Config file paths. e.g. -c='/home/xx/config.json'.",
-	)
-	flag.Parse()
-
-	// Load config from file.
+	// Load config from './config.json'.
 	// You may rename "config.example.json" to "config.json" and modify it.
 	// It looks like:
 	//{
@@ -52,11 +43,14 @@ func main() {
 	//          "port":"5432",
 	//          "user":"postgres",
 	//          "password":"",
+	//          "db_name":"hr",
 	//          "ssl":false
 	//      },
 	//      "csv_file":"/home/xx/hr-employees.csv"
 	//}
 
+	// Get Absolute path of "./config.json"
+	configFile, _ := pathhelper.GetAbsPath("config.json")
 	if err = loadConfig(configFile, &config); err != nil {
 		log.Printf("loadConfig() error: %v", err)
 		return
