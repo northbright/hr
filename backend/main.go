@@ -48,7 +48,7 @@ func main() {
 	r := gin.Default()
 
 	// Core APIs.
-	r.POST("/api/login", postLoginHandler)
+	r.POST("/api/login", login)
 	r.GET("/api/csrf_token", getCSRFTokenHandler)
 
 	r.Run(config.HTTPServer.Addr)

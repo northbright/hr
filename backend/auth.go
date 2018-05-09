@@ -43,7 +43,7 @@ func validLogin(username, password string) bool {
 	return true
 }
 
-func postLoginHandler(c *gin.Context) {
+func login(c *gin.Context) {
 	type Req struct {
 		Username  string `json:"username"`
 		Password  string `json:"password"`
