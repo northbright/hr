@@ -25,3 +25,5 @@ frontend/*
 !*.gif
 # For CSV
 !*.csv
+# For vue
+!*.vue
