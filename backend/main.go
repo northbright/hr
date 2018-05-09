@@ -49,7 +49,7 @@ func main() {
 
 	// Core APIs.
 	r.POST("/api/login", login)
-	r.GET("/api/csrf_token", getCSRFTokenHandler)
+	r.GET("/api/csrf_token", getCSRFToken)
 
 	r.Run(config.HTTPServer.Addr)
 }

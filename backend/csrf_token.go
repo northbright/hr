@@ -47,7 +47,7 @@ func validCSRFToken(pool *redis.Pool, token string) (bool, error) {
 	return exists, nil
 }
 
-func getCSRFTokenHandler(c *gin.Context) {
+func getCSRFToken(c *gin.Context) {
 	type Reply struct {
 		ErrMsg    string `json:"err_msg"`
 		CSRFToken string `json:"csrf_token"`
