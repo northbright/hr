@@ -16,8 +16,8 @@
         "password":""
     },
     "jwt_keys": {
-	"kid":"server",
-	"signing_key_file":"/home/xxu/projects-go/src/github.com/northbright/hr/keys/id_rsa",
-	"verifying_key_file":"/home/xxu/projects-go/src/github.com/northbright/hr/keys/id_rsa.pub"
+	"key_id":"server",
+	"signing_key_file":"/home/xx/.ssh/id_rsa",
+	"verifying_key_file":"/home/xx/.ssh/id_rsa.pub"
     }
 }

@@ -28,11 +28,19 @@ type PostgreSQLConfig struct {
 	Password string `json:"password"`
 }
 
+// JWTKeysConfig contains the signing / verifying key for JWT.
+type JWTKeysConfig struct {
+	KID              string `json:"kid"`
+	SigningKeyFile   string `json:"signing_key_file"`
+	VerifyingKeyFile string `json:"verifying_key_file"`
+}
+
 // Config represents the app settings.
 type Config struct {
 	HTTPServer HTTPServerConfig `json:"http_server"`
 	Redis      RedisConfig      `json:"redis"`
 	PostgreSQL PostgreSQLConfig `json:"postgresql"`
+	JWTKeys    JWTKeysConfig    `json:"jwt_keys"`
 }
 
 // loadConfig loads app config.

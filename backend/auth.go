@@ -18,7 +18,10 @@ func getLoginID(c *gin.Context) (string, error) {
 		return "", fmt.Errorf("no jwt found in cookie")
 	case nil:
 		tokenString := cookie.Value
-		parser, err := jwthelper.NewParser(jwt.SigningMethodRS256, []byte(rsaPubPEM))
+		parser, err := jwthelper.NewParserFromFile(
+			jwt.SigningMethodRS256,
+			config.JWTKeys.VerifyingKeyFile,
+		)
 		if err != nil {
 			return "", err
 		}
@@ -28,14 +31,22 @@ func getLoginID(c *gin.Context) (string, error) {
 			return "", fmt.Errorf("parser.Parse() error: %v", err)
 		}
 
-		// Convert interface{} to string
+		KID, ok := m["kid"].(string)
+		if !ok {
+			return "", fmt.Errorf("failed to convert interface{} to string")
+		}
+		// Check KID
+		if KID != config.JWTKeys.KID {
+			return "", fmt.Errorf("invalid KID in JWT")
+		}
+
 		ID, ok := m["id"].(string)
 		if !ok {
 			return "", fmt.Errorf("failed to convert interface{} to string")
 		}
 		return ID, nil
 	default:
-		return "", fmt.Errorf("get JWT cookie error: %v", err)
+		return "", fmt.Errorf("get ID from JWT cookie error: %v", err)
 	}
 }
 
@@ -96,7 +107,10 @@ func login(c *gin.Context) {
 
 	reply.ID = "1"
 
-	signer, err := jwthelper.NewSigner(jwt.SigningMethodRS256, []byte(rsaPrivPEM))
+	signer, err := jwthelper.NewSignerFromFile(
+		jwt.SigningMethodRS256,
+		config.JWTKeys.SigningKeyFile,
+	)
 	if err != nil {
 		statusCode = 500
 		reply.ErrMsg = "failed to create token signer"
@@ -104,6 +118,7 @@ func login(c *gin.Context) {
 	}
 
 	tokenString, err := signer.SignedString(
+		jwthelper.NewClaim("kid", config.JWTKeys.KID),
 		jwthelper.NewClaim("id", reply.ID),
 	)
 	if err != nil {
