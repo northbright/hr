@@ -25,7 +25,9 @@ type RedisConfig struct {
 type PostgreSQLConfig struct {
 	Host     string `json:"host"`
 	Port     string `json:"port"`
+	Username string `json:"username"`
 	Password string `json:"password"`
+	DBName   string `json:"dbname"`
 }
 
 // JWTConfig contains the signing / verifying key for JWT.
