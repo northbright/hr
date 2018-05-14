@@ -43,8 +43,8 @@ export default {
            csrf_token: this.csrf_token
          })
          .then( (response) => {
-           console.log(response)
-           this.$store.commit(types.LOGIN, response.id)
+           console.log("POST /login success. data: " + response.data)
+           this.$store.commit(types.LOGIN, response.data.id)
            this.$router.push({
              path: '/',
            })

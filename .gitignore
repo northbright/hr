@@ -3,11 +3,14 @@
 # Unignore all sub dirs
 !*/
 
+# Unignore server
+!server/
+
 # Ignore frontend
-frontend/*
+server/frontend/*
 # Unignore frontend/src
-!frontend/src/
-!frontend/src/*/
+!server/frontend/src/
+!server/frontend/src/*/
 
 # Unignore for these files
 !.gitignore

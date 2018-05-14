@@ -6,9 +6,9 @@ import (
 	"net/http"
 	//"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/northbright/jwthelper"
+	"github.com/northbright/pathhelper"
 )
 
 func getLoginID(c *gin.Context) (string, error) {
@@ -18,9 +18,17 @@ func getLoginID(c *gin.Context) (string, error) {
 		return "", fmt.Errorf("no jwt found in cookie")
 	case nil:
 		tokenString := cookie.Value
+
+		// Get absolute path of key file.
+		keyFilePath, err := pathhelper.GetAbsPath(config.JWT.VerifyingKeyFile)
+		if err != nil {
+			return "", err
+		}
+
+		// Create a JWT parser.
 		parser, err := jwthelper.NewParserFromFile(
-			jwt.SigningMethodRS256,
-			config.JWTKeys.VerifyingKeyFile,
+			config.JWT.Alg,
+			keyFilePath,
 		)
 		if err != nil {
 			return "", err
@@ -36,7 +44,7 @@ func getLoginID(c *gin.Context) (string, error) {
 			return "", fmt.Errorf("failed to convert interface{} to string")
 		}
 		// Check KID
-		if KID != config.JWTKeys.KID {
+		if KID != config.JWT.KID {
 			return "", fmt.Errorf("invalid KID in JWT")
 		}
 
@@ -108,8 +116,8 @@ func login(c *gin.Context) {
 	reply.ID = "1"
 
 	signer, err := jwthelper.NewSignerFromFile(
-		jwt.SigningMethodRS256,
-		config.JWTKeys.SigningKeyFile,
+		config.JWT.Alg,
+		config.JWT.SigningKeyFile,
 	)
 	if err != nil {
 		statusCode = 500
@@ -118,7 +126,7 @@ func login(c *gin.Context) {
 	}
 
 	tokenString, err := signer.SignedString(
-		jwthelper.NewClaim("kid", config.JWTKeys.KID),
+		jwthelper.NewClaim("kid", config.JWT.KID),
 		jwthelper.NewClaim("id", reply.ID),
 	)
 	if err != nil {

@@ -15,9 +15,10 @@
         "port":"5432",
         "password":""
     },
-    "jwt_keys": {
-	"key_id":"server",
-	"signing_key_file":"/home/xx/.ssh/id_rsa",
-	"verifying_key_file":"/home/xx/.ssh/id_rsa.pub"
+    "jwt": {
+	"kid":"server",
+	"alg":"RS256",
+	"signing_key_file":"../keys/id_rsa",
+	"verifying_key_file":"../keys/id_rsa.pub"
     }
 }
