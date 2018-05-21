@@ -4,8 +4,10 @@
 	"port":"5432",
 	"user":"postgres",
 	"password":"",
-	"db_name":"hr",
-	"ssl":false
+	"dbname":"hr"
     },
-    "csv_file":"/home/xx/hr-employees.csv"
+    "csv": {
+	"file":"/home/xx/hr-employee.csv",
+        "has_header":true
+    }
 }
