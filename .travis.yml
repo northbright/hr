@@ -29,6 +29,6 @@ script:
   - go test -v ./...
 
   # Tools
-  - cd tools/update-employees/
+  - cd tools/create-employees/
   - go build
   - cd ../../
