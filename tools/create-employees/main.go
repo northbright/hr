@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -68,7 +69,7 @@ func main() {
 		return
 	}
 
-	fmt.Printf("records: %v\n", records)
+	//fmt.Printf("records: %v\n", records)
 
 	info := fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=disable",
 		config.PostgreSQL.Host,
@@ -96,18 +97,31 @@ func main() {
 	}
 
 	for _, record := range records {
-		ID, err := hr.CreateEmployee(db, record[0], record[1], record[2], record[3])
-		if err != nil {
-			log.Printf("hr.CreateEmployee() error: %v, name: %v", err, record[0])
-			return
+		name := record[0]
+		sex := record[1]
+		IDCardNo := record[2]
+		mobilePhoneNum := ""
+
+		phoneNums := strings.Split(record[3], "/")
+		if len(phoneNums) == 2 {
+			mobilePhoneNum = phoneNums[0]
+		} else {
+			mobilePhoneNum = record[3]
 		}
-		log.Printf("CreateEmployee() OK. ID: %v, name: %v, sex: %v, id_card_no: %v, mobile_phone_num: %v",
-			ID,
-			record[0],
-			record[1],
-			record[2],
-			record[3],
-		)
+
+		_, err := hr.CreateEmployee(db, name, sex, IDCardNo, mobilePhoneNum)
+		if err != nil {
+			log.Printf("hr.CreateEmployee() error: %v, name: %v, sex: %v, ID Card No: %v, mobile phone num: %v\n",
+				err, name, sex, IDCardNo, mobilePhoneNum)
+			continue
+		}
+		//log.Printf("CreateEmployee() OK. ID: %v, name: %v, sex: %v, id_card_no: %v, mobile_phone_num: %v",
+		//	ID,
+		//	name,
+		//	sex,
+		//	IDCardNo,
+		//	mobilePhoneNum,
+		//)
 	}
 
 }
