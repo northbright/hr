@@ -1,7 +1,8 @@
 package hr
 
 import (
-	"fmt"
+	//"fmt"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -14,9 +15,22 @@ type Employee struct {
 	MobilePhoneNum string `db:"mobile_phone_num"`
 }
 
-var (
-	ErrInvalidSex = fmt.Errorf("invalid sex")
-)
+var ()
+
+func updateSex(sex string) string {
+	sex = strings.ToLower(sex)
+
+	switch sex {
+	case "m", "f", "n":
+		return sex
+	case "男":
+		return "m"
+	case "女":
+		return "f"
+	default:
+		return "n"
+	}
+}
 
 func CreateEmployee(db *sqlx.DB, name, sex, IDCardNo, mobilePhoneNum string) (int64, error) {
 	stat := `
@@ -25,19 +39,7 @@ func CreateEmployee(db *sqlx.DB, name, sex, IDCardNo, mobilePhoneNum string) (in
 	RETURNING id`
 	var ID int64
 
-	if sex == "男" {
-		sex = "m"
-	} else if sex == "女" {
-		sex = "f"
-	} else if sex == "" {
-		sex = "n"
-	}
-
-	if sex != "m" && sex != "f" && sex != "n" {
-		fmt.Printf("invalid sex: %v", sex)
-		return 0, ErrInvalidSex
-
-	}
+	sex = updateSex(sex)
 
 	err := db.QueryRow(stat, name, sex, IDCardNo, mobilePhoneNum).Scan(&ID)
 	if err != nil {
