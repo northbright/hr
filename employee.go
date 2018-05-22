@@ -1,10 +1,10 @@
 package hr
 
 import (
-	//"fmt"
-	"strings"
+	"fmt"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/northbright/validate"
 )
 
 type Employee struct {
@@ -15,22 +15,10 @@ type Employee struct {
 	MobilePhoneNum string `db:"mobile_phone_num"`
 }
 
-var ()
-
-func updateSex(sex string) string {
-	sex = strings.ToLower(sex)
-
-	switch sex {
-	case "m", "f", "n":
-		return sex
-	case "男":
-		return "m"
-	case "女":
-		return "f"
-	default:
-		return "n"
-	}
-}
+var (
+	ErrInvalidIDCardNo       = fmt.Errorf("invalid ID card number")
+	ErrInvalidMobilePhoneNum = fmt.Errorf("invalid mobile phone number")
+)
 
 func CreateEmployee(db *sqlx.DB, name, sex, IDCardNo, mobilePhoneNum string) (int64, error) {
 	stat := `
@@ -39,7 +27,14 @@ func CreateEmployee(db *sqlx.DB, name, sex, IDCardNo, mobilePhoneNum string) (in
 	RETURNING id`
 	var ID int64
 
-	sex = updateSex(sex)
+	sex = UpdateSex(sex)
+	if !validate.ValidIDCardNo(IDCardNo) {
+		return 0, ErrInvalidIDCardNo
+	}
+
+	if !validate.ValidMobilePhoneNum(mobilePhoneNum) {
+		return 0, ErrInvalidMobilePhoneNum
+	}
 
 	err := db.QueryRow(stat, name, sex, IDCardNo, mobilePhoneNum).Scan(&ID)
 	if err != nil {
