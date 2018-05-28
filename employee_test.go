@@ -52,5 +52,15 @@ func ExampleCreateEmployee() {
 		}
 	}
 
+	// Get employee by mobile phone number.
+	for _, data := range employeeData {
+		if e, err := hr.QueryEmployeeByMobilePhoneNum(db, data[3]); err != nil {
+			log.Printf("QueryEmployeeByMobilePhoneNum(%v) error: %v", data[3], err)
+			return
+		} else {
+			log.Printf("QueryEmployeeByMobilePhoneNum(%v) OK. employee: %v", data[3], e)
+		}
+	}
+
 	// Output:
 }

@@ -71,3 +71,14 @@ func QueryEmployeeByIDCardNo(db *sqlx.DB, IDCardNo string) (*Employee, error) {
 	}
 	return e, nil
 }
+
+func QueryEmployeeByMobilePhoneNum(db *sqlx.DB, mobilePhoneNum string) (*Employee, error) {
+	stat := `SELECT * FROM employee WHERE mobile_phone_num = $1`
+	e := &Employee{}
+
+	err := db.Get(e, stat, mobilePhoneNum)
+	if err != nil {
+		return nil, err
+	}
+	return e, nil
+}
