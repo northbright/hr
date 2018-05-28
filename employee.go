@@ -8,7 +8,7 @@ import (
 )
 
 type Employee struct {
-	ID             int64  `db:id`
+	ID             int64  `db:"id"`
 	Name           string `db:"name"`
 	Sex            string `db:"sex"`
 	IDCardNo       string `db:"id_card_no"`
@@ -41,4 +41,22 @@ func CreateEmployee(db *sqlx.DB, name, sex, IDCardNo, mobilePhoneNum string) (in
 		return 0, err
 	}
 	return ID, nil
+}
+
+func GetEmployee(db *sqlx.DB, ID int64) (*Employee, error) {
+	stat := `SELECT * FROM employee WHERE ID = $1`
+	e := &Employee{}
+
+	err := db.Get(e, stat, ID)
+	if err != nil {
+		return nil, err
+	}
+	return e, nil
+}
+
+func RemoveAllEmployees(db *sqlx.DB) error {
+	stat := `DELETE FROM employee`
+
+	_, err := db.Exec(stat)
+	return err
 }
