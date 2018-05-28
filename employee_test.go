@@ -23,8 +23,7 @@ func ExampleCreateEmployee() {
 
 	// Create employees.
 	for _, data := range employeeData {
-		ID, err := hr.CreateEmployee(db, data[0], data[1], data[2], data[3])
-		if err != nil {
+		if ID, err := hr.CreateEmployee(db, data[0], data[1], data[2], data[3]); err != nil {
 			log.Printf("CreateEmployee() error: %v", err)
 			return
 		} else {
@@ -35,12 +34,21 @@ func ExampleCreateEmployee() {
 
 	// Get employee data by ID.
 	for _, ID := range IDs {
-		e, err := hr.GetEmployee(db, ID)
-		if err != nil {
+		if e, err := hr.GetEmployee(db, ID); err != nil {
 			log.Printf("GetEmployee(%v) error: %v", ID, err)
 			return
 		} else {
 			log.Printf("GetEmployee(%v) OK. employee: %v", ID, e)
+		}
+	}
+
+	// Get employee by ID card number.
+	for _, data := range employeeData {
+		if e, err := hr.QueryEmployeeByIDCardNo(db, data[2]); err != nil {
+			log.Printf("QueryEmployeeByIDCardNo(%v) error: %v", data[2], err)
+			return
+		} else {
+			log.Printf("QueryEmployeeByIDCardNo(%v) OK. employee: %v", data[2], e)
 		}
 	}
 

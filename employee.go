@@ -44,7 +44,7 @@ func CreateEmployee(db *sqlx.DB, name, sex, IDCardNo, mobilePhoneNum string) (in
 }
 
 func GetEmployee(db *sqlx.DB, ID int64) (*Employee, error) {
-	stat := `SELECT * FROM employee WHERE ID = $1`
+	stat := `SELECT * FROM employee WHERE id = $1`
 	e := &Employee{}
 
 	err := db.Get(e, stat, ID)
@@ -59,4 +59,15 @@ func RemoveAllEmployees(db *sqlx.DB) error {
 
 	_, err := db.Exec(stat)
 	return err
+}
+
+func QueryEmployeeByIDCardNo(db *sqlx.DB, IDCardNo string) (*Employee, error) {
+	stat := `SELECT * FROM employee WHERE id_card_no = $1`
+	e := &Employee{}
+
+	err := db.Get(e, stat, IDCardNo)
+	if err != nil {
+		return nil, err
+	}
+	return e, nil
 }
