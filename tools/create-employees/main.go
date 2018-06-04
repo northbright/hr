@@ -97,31 +97,25 @@ func main() {
 	}
 
 	for _, record := range records {
-		name := record[0]
-		sex := record[1]
-		IDCardNo := record[2]
-		mobilePhoneNum := ""
+		e := hr.Employee{}
+
+		e.Name = record[0]
+		e.Sex = record[1]
+		e.IDCardNo = record[2]
 
 		phoneNums := strings.Split(record[3], "/")
 		if len(phoneNums) == 2 {
-			mobilePhoneNum = phoneNums[0]
+			e.MobilePhoneNum = phoneNums[0]
 		} else {
-			mobilePhoneNum = record[3]
+			e.MobilePhoneNum = record[3]
 		}
 
-		_, err := hr.CreateEmployee(db, name, sex, IDCardNo, mobilePhoneNum)
+		_, err := hr.CreateEmployee(db, &e)
 		if err != nil {
 			log.Printf("hr.CreateEmployee() error: %v, name: %v, sex: %v, ID Card No: %v, mobile phone num: %v\n",
-				err, name, sex, IDCardNo, mobilePhoneNum)
+				err, record[0], record[1], record[2], record[3])
 			continue
 		}
-		//log.Printf("CreateEmployee() OK. ID: %v, name: %v, sex: %v, id_card_no: %v, mobile_phone_num: %v",
-		//	ID,
-		//	name,
-		//	sex,
-		//	IDCardNo,
-		//	mobilePhoneNum,
-		//)
 	}
 
 }
