@@ -52,6 +52,10 @@ func ExampleCreateEmployee() {
 		}
 	}
 
+	// Test of invalid ID card number.
+	jsonStr, err := hr.QueryEmployeeByIDCardNo(db, "0000")
+	log.Printf("\nTest of invalid ID card number: JSON: %v, err: %v", jsonStr, err)
+
 	// Get employee by mobile phone number.
 	for _, e := range employees {
 		if jsonStr, err := hr.QueryEmployeeByMobilePhoneNum(db, e.MobilePhoneNum); err != nil {
@@ -61,6 +65,10 @@ func ExampleCreateEmployee() {
 			log.Printf("QueryEmployeeByMobilePhoneNum(%v) OK. JSON: %v", e.MobilePhoneNum, jsonStr)
 		}
 	}
+
+	// Test of invalid mobile phone number.
+	jsonStr, err = hr.QueryEmployeeByMobilePhoneNum(db, "0000")
+	log.Printf("\nTest of invalid mobile phone number: JSON: %v, err: %v", jsonStr, err)
 
 	// Output:
 }
