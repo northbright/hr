@@ -97,7 +97,7 @@ func main() {
 	}
 
 	for _, record := range records {
-		e := hr.Employee{}
+		e := hr.EmployeeData{}
 
 		e.Name = record[0]
 		e.Sex = record[1]
