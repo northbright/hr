@@ -21,6 +21,7 @@ var (
 	ErrInvalidSex            = fmt.Errorf("invalid sex")
 	ErrInvalidIDCardNo       = fmt.Errorf("invalid ID card number")
 	ErrInvalidMobilePhoneNum = fmt.Errorf("invalid mobile phone number")
+	ErrNotUnique             = fmt.Errorf("at least one unique item is not unique")
 )
 
 func (e *Employee) Valid() error {
@@ -42,6 +43,23 @@ func (e *Employee) Valid() error {
 	return nil
 }
 
+func (e *Employee) CheckUniqueItems(db *sqlx.DB) error {
+	var n int64
+	stat := `SELECT COUNT(*) FROM employee
+WHERE data @> jsonb_build_object('id_card_no',$1::text)
+OR data @> jsonb_build_object('mobile_phone_num',$2::text)
+
+`
+	if err := db.Get(&n, stat, e.IDCardNo, e.MobilePhoneNum); err != nil {
+		return err
+	}
+
+	if n > 0 {
+		return ErrNotUnique
+	}
+	return nil
+}
+
 func CreateEmployee(db *sqlx.DB, e *Employee) (int64, error) {
 	stat := `
 	INSERT INTO employee (data) 
@@ -51,6 +69,10 @@ func CreateEmployee(db *sqlx.DB, e *Employee) (int64, error) {
 
 	e.Sex = UpdateSex(e.Sex)
 	if err := e.Valid(); err != nil {
+		return 0, err
+	}
+
+	if err := e.CheckUniqueItems(db); err != nil {
 		return 0, err
 	}
 
