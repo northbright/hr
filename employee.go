@@ -17,9 +17,30 @@ type Employee struct {
 }
 
 var (
+	ErrInvalidName           = fmt.Errorf("invalid name")
+	ErrInvalidSex            = fmt.Errorf("invalid sex")
 	ErrInvalidIDCardNo       = fmt.Errorf("invalid ID card number")
 	ErrInvalidMobilePhoneNum = fmt.Errorf("invalid mobile phone number")
 )
+
+func (e *Employee) Valid() error {
+	if e.Name == "" {
+		return ErrInvalidName
+	}
+
+	if e.Sex != "m" && e.Sex != "f" && e.Sex != "n" {
+		return ErrInvalidSex
+	}
+
+	if !validate.ValidIDCardNo(e.IDCardNo) {
+		return ErrInvalidIDCardNo
+	}
+
+	if !validate.ValidMobilePhoneNum(e.MobilePhoneNum) {
+		return ErrInvalidMobilePhoneNum
+	}
+	return nil
+}
 
 func CreateEmployee(db *sqlx.DB, e *Employee) (int64, error) {
 	stat := `
@@ -29,12 +50,8 @@ func CreateEmployee(db *sqlx.DB, e *Employee) (int64, error) {
 	var ID int64
 
 	e.Sex = UpdateSex(e.Sex)
-	if !validate.ValidIDCardNo(e.IDCardNo) {
-		return 0, ErrInvalidIDCardNo
-	}
-
-	if !validate.ValidMobilePhoneNum(e.MobilePhoneNum) {
-		return 0, ErrInvalidMobilePhoneNum
+	if err := e.Valid(); err != nil {
+		return 0, err
 	}
 
 	jsonData, err := json.Marshal(e)
