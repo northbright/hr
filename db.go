@@ -6,7 +6,7 @@ import (
 
 var schema = `
 CREATE TABLE IF NOT EXISTS employee (
-    id SERIAL PRIMARY KEY,
+    id TEXT PRIMARY KEY,
     data JSONB
 );
 

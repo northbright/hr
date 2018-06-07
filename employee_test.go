@@ -19,7 +19,7 @@ func ExampleCreateEmployee() {
 		return
 	}
 
-	var IDs []int64
+	var IDs []string
 
 	// Create employees.
 	for _, e := range employees {
