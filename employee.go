@@ -10,11 +10,17 @@ import (
 	"github.com/northbright/validate"
 )
 
-type Employee struct {
+type EmployeeData struct {
 	Name           string `json:"name"`
 	Sex            string `json:"sex"`
 	IDCardNo       string `json:"id_card_no"`
 	MobilePhoneNum string `json:"mobile_phone_num"`
+}
+
+// Employee contains ID and full employee data.
+type Employee struct {
+	ID string `json:"id"`
+	*EmployeeData
 }
 
 var (
@@ -25,7 +31,7 @@ var (
 	ErrNotUnique             = fmt.Errorf("at least one unique item is not unique")
 )
 
-func (e *Employee) Valid() error {
+func (e *EmployeeData) Valid() error {
 	if e.Name == "" {
 		return ErrInvalidName
 	}
@@ -44,7 +50,7 @@ func (e *Employee) Valid() error {
 	return nil
 }
 
-func (e *Employee) CheckUniqueItems(db *sqlx.DB) error {
+func (e *EmployeeData) CheckUniqueItems(db *sqlx.DB) error {
 	var n int64
 	stat := `SELECT COUNT(*) FROM employee
 WHERE data @> jsonb_build_object('id_card_no',$1::text)
@@ -60,7 +66,7 @@ OR data @> jsonb_build_object('mobile_phone_num',$2::text)`
 	return nil
 }
 
-func CreateEmployee(db *sqlx.DB, e *Employee) (string, error) {
+func CreateEmployee(db *sqlx.DB, e *EmployeeData) (string, error) {
 	var (
 		err error
 		ID  string
@@ -81,7 +87,8 @@ func CreateEmployee(db *sqlx.DB, e *Employee) (string, error) {
 		return "", err
 	}
 
-	jsonData, err := json.Marshal(e)
+	newEmployee := Employee{ID, e}
+	jsonData, err := json.Marshal(newEmployee)
 	if err != nil {
 		return "", err
 	}

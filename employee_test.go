@@ -7,10 +7,10 @@ import (
 )
 
 func ExampleCreateEmployee() {
-	employees := []hr.Employee{
-		hr.Employee{"Frank", "m", "310104198101010000", "13100000000"},
-		hr.Employee{"Bob", "m", "310104198201010000", "13300000000"},
-		hr.Employee{"Alice", "f", "310104198302020000", "13500000000"},
+	employees := []hr.EmployeeData{
+		hr.EmployeeData{"Frank", "m", "310104198101010000", "13100000000"},
+		hr.EmployeeData{"Bob", "m", "310104198201010000", "13300000000"},
+		hr.EmployeeData{"Alice", "f", "310104198302020000", "13500000000"},
 	}
 
 	// Remove all employees in the table.
