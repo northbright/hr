@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/northbright/uuid"
@@ -30,6 +31,21 @@ var (
 	ErrInvalidMobilePhoneNum = fmt.Errorf("invalid mobile phone number")
 	ErrNotUnique             = fmt.Errorf("at least one unique item is not unique")
 )
+
+func UpdateSex(sex string) string {
+	sex = strings.ToLower(sex)
+
+	switch sex {
+	case "m", "f", "n":
+		return sex
+	case "男":
+		return "m"
+	case "女":
+		return "f"
+	default:
+		return "n"
+	}
+}
 
 func (e *EmployeeData) Valid() error {
 	if e.Name == "" {
