@@ -1,6 +1,8 @@
 package hr
 
 import (
+	"database/sql"
+
 	"github.com/jmoiron/sqlx"
 )
 
@@ -18,4 +20,18 @@ func InitDB(db *sqlx.DB) error {
 		return err
 	}
 	return nil
+}
+
+func GetJSONData(db *sqlx.DB, sqlStat string, args ...interface{}) ([]byte, error) {
+	var jsonData []byte
+
+	err := db.Get(&jsonData, sqlStat, args...)
+	switch err {
+	case sql.ErrNoRows:
+		return []byte(`{}`), nil
+	case nil:
+		return jsonData, nil
+	default:
+		return []byte(`{}`), err
+	}
 }

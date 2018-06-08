@@ -1,7 +1,6 @@
 package hr
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -115,19 +114,9 @@ func CreateEmployee(db *sqlx.DB, e *EmployeeData) (string, error) {
 	return ID, nil
 }
 
-func GetEmployee(db *sqlx.DB, ID string) (string, error) {
-	var jsonStr string
+func GetEmployee(db *sqlx.DB, ID string) ([]byte, error) {
 	stat := `SELECT data FROM employee WHERE id = $1`
-
-	err := db.Get(&jsonStr, stat, ID)
-	switch err {
-	case sql.ErrNoRows:
-		return `{}`, nil
-	case nil:
-		return jsonStr, nil
-	default:
-		return `{}`, err
-	}
+	return GetJSONData(db, stat, ID)
 }
 
 func RemoveAllEmployees(db *sqlx.DB) error {
@@ -137,34 +126,14 @@ func RemoveAllEmployees(db *sqlx.DB) error {
 	return err
 }
 
-func QueryEmployeeByIDCardNo(db *sqlx.DB, IDCardNo string) (string, error) {
-	var jsonStr string
+func GetEmployeeByIDCardNo(db *sqlx.DB, IDCardNo string) ([]byte, error) {
 	stat := `SELECT data FROM employee
 WHERE data @> jsonb_build_object('id_card_no',$1::text)`
-
-	err := db.Get(&jsonStr, stat, IDCardNo)
-	switch err {
-	case sql.ErrNoRows:
-		return `{}`, nil
-	case nil:
-		return jsonStr, nil
-	default:
-		return `{}`, err
-	}
+	return GetJSONData(db, stat, IDCardNo)
 }
 
-func QueryEmployeeByMobilePhoneNum(db *sqlx.DB, mobilePhoneNum string) (string, error) {
-	var jsonStr string
+func GetEmployeeByMobilePhoneNum(db *sqlx.DB, mobilePhoneNum string) ([]byte, error) {
 	stat := `SELECT data FROM employee
 WHERE data @> jsonb_build_object('mobile_phone_num',$1::text)`
-
-	err := db.Get(&jsonStr, stat, mobilePhoneNum)
-	switch err {
-	case sql.ErrNoRows:
-		return `{}`, nil
-	case nil:
-		return jsonStr, nil
-	default:
-		return `{}`, err
-	}
+	return GetJSONData(db, stat, mobilePhoneNum)
 }
