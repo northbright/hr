@@ -7,6 +7,10 @@ import (
 )
 
 func ExampleCreateEmployee() {
+	var (
+		IDs []string
+	)
+
 	employees := []hr.EmployeeData{
 		hr.EmployeeData{"Frank", "m", "310104198101010000", "13100000000"},
 		hr.EmployeeData{"Bob", "m", "310104198201010000", "13300000000"},
@@ -14,42 +18,40 @@ func ExampleCreateEmployee() {
 	}
 
 	// Remove all employees in the table.
-	if err := hr.RemoveAllEmployees(db); err != nil {
+	if err = hr.RemoveAllEmployees(db); err != nil {
 		log.Printf("RemoveAllEmployees() error: %v", err)
 		return
 	}
 
-	var IDs []string
-
 	// Create employees.
 	for _, e := range employees {
-		if ID, err := hr.CreateEmployee(db, &e); err != nil {
+		ID, err := hr.CreateEmployee(db, &e)
+		if err != nil {
 			log.Printf("CreateEmployee() error: %v", err)
 			return
-		} else {
-			IDs = append(IDs, ID)
-			log.Printf("CreateEmployee() OK. ID = %v, employee: %v", ID, e)
 		}
+		IDs = append(IDs, ID)
+		log.Printf("CreateEmployee() OK. ID = %v, employee: %v", ID, e)
 	}
 
 	// Get employee data by ID.
 	for _, ID := range IDs {
-		if jsonData, err := hr.GetEmployee(db, ID); err != nil {
+		jsonData, err := hr.GetEmployee(db, ID)
+		if err != nil {
 			log.Printf("GetEmployee(%v) error: %v", ID, err)
 			return
-		} else {
-			log.Printf("GetEmployee(%v) OK. JSON: %s", ID, jsonData)
 		}
+		log.Printf("GetEmployee(%v) OK. JSON: %s", ID, jsonData)
 	}
 
 	// Get employee by ID card number.
 	for _, e := range employees {
-		if jsonData, err := hr.GetEmployeeByIDCardNo(db, e.IDCardNo); err != nil {
+		jsonData, err := hr.GetEmployeeByIDCardNo(db, e.IDCardNo)
+		if err != nil {
 			log.Printf("GetEmployeeByIDCardNo(%v) error: %v", e.IDCardNo, err)
 			return
-		} else {
-			log.Printf("GetEmployeeByIDCardNo(%v) OK. JSON: %s", e.IDCardNo, jsonData)
 		}
+		log.Printf("GetEmployeeByIDCardNo(%v) OK. JSON: %s", e.IDCardNo, jsonData)
 	}
 
 	// Test of invalid ID card number.
@@ -58,12 +60,12 @@ func ExampleCreateEmployee() {
 
 	// Get employee by mobile phone number.
 	for _, e := range employees {
-		if jsonData, err := hr.GetEmployeeByMobilePhoneNum(db, e.MobilePhoneNum); err != nil {
+		jsonData, err := hr.GetEmployeeByMobilePhoneNum(db, e.MobilePhoneNum)
+		if err != nil {
 			log.Printf("GetEmployeeByMobilePhoneNum(%v) error: %v", e.MobilePhoneNum, err)
 			return
-		} else {
-			log.Printf("GetEmployeeByMobilePhoneNum(%v) OK. JSON: %s", e.MobilePhoneNum, jsonData)
 		}
+		log.Printf("GetEmployeeByMobilePhoneNum(%v) OK. JSON: %s", e.MobilePhoneNum, jsonData)
 	}
 
 	// Test of invalid mobile phone number.

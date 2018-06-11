@@ -13,6 +13,13 @@ CREATE TABLE IF NOT EXISTS employee (
 );
 
 CREATE INDEX on employee USING GIN (data);
+
+CREATE TABLE IF NOT EXISTS task (
+    id TEXT PRIMARY KEY,
+    data JSONB
+);
+
+CREATE INDEX on task USING GIN (data);
 `
 
 func InitDB(db *sqlx.DB) error {
@@ -33,5 +40,19 @@ func GetJSONData(db *sqlx.DB, sqlStat string, args ...interface{}) ([]byte, erro
 		return jsonData, nil
 	default:
 		return []byte(`{}`), err
+	}
+}
+
+func SelectJSONData(db *sqlx.DB, sqlStat string, args ...interface{}) ([][]byte, error) {
+	var jsonDataArr [][]byte
+
+	err := db.Select(&jsonDataArr, sqlStat, args...)
+	switch err {
+	case sql.ErrNoRows:
+		return [][]byte{}, nil
+	case nil:
+		return jsonDataArr, nil
+	default:
+		return [][]byte{}, err
 	}
 }
