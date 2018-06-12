@@ -9,6 +9,9 @@ go:
 services:
   - postgresql
 
+addons:
+  postgresql: "10"
+
 before_install:
 
 install:
