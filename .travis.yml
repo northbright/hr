@@ -7,7 +7,7 @@ go:
   - tip
 
 services:
-  - redis-server
+  - postgresql
 
 before_install:
 
@@ -26,6 +26,7 @@ install:
  - go get github.com/northbright/validate
 
 before_script:
+ - psql -c 'CREATE DATABASE test;' -U postgres
 
 script:
   - go test -v ./...
