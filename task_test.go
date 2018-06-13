@@ -86,21 +86,46 @@ func ExampleCreateTask() {
 	}
 
 	// Get tasks by assigner.
-	n, err := hr.GetTaskCountByAssigner(db, IDs[0])
+	assigner := IDs[0]
+	n, err := hr.GetTaskCountByAssigner(db, assigner)
 	if err != nil {
 		log.Printf("GetTaskCountByAssigner() error: %v", err)
 		return
 	}
+	log.Printf("GetTaskCountByAssigner() OK. assigner: %v, count: %v", assigner, n)
 
 	limit := int64(2)
 	offset := int64(0)
 	for offset = 0; offset < n; offset += limit {
-		jsonDataArr, err := hr.GetTasksByAssigner(db, IDs[0], limit, offset)
+		jsonDataArr, err := hr.GetTasksByAssigner(db, assigner, limit, offset)
 		if err != nil {
 			log.Printf("GetTasksByAssigner() error: %v", err)
 			return
 		}
 		log.Printf("GetTasksByAssigner() OK. LIMIT: %v, OFFSET: %v", limit, offset)
+		for _, data := range jsonDataArr {
+			log.Printf("JSON: %s\n", data)
+		}
+	}
+
+	// Get tasks by assignee.
+	assignee := IDs[1]
+	n, err = hr.GetTaskCountByAssignee(db, assignee)
+	if err != nil {
+		log.Printf("GetTaskCountByAssignee() error: %v", err)
+		return
+	}
+	log.Printf("GetTaskCountByAssignee() OK. assignee: %v, count: %v", assignee, n)
+
+	limit = int64(1)
+	offset = int64(0)
+	for offset = 0; offset < n; offset += limit {
+		jsonDataArr, err := hr.GetTasksByAssignee(db, assignee, limit, offset)
+		if err != nil {
+			log.Printf("GetTasksByAssignee() error: %v", err)
+			return
+		}
+		log.Printf("GetTasksByAssignee() OK. LIMIT: %v, OFFSET: %v", limit, offset)
 		for _, data := range jsonDataArr {
 			log.Printf("JSON: %s\n", data)
 		}

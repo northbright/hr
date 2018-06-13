@@ -122,3 +122,20 @@ WHERE data @> jsonb_build_object('assigner',$1::text)
 ORDER BY created DESC LIMIT $2 OFFSET $3`
 	return SelectJSONData(db, stat, assigner, limit, offset)
 }
+
+func GetTaskCountByAssignee(db *sqlx.DB, assignee string) (int64, error) {
+	var n int64
+	stat := `SELECT COUNT(*) FROM task
+WHERE (data->'assignees')::jsonb ? $1::text`
+	if err := db.Get(&n, stat, assignee); err != nil {
+		return 0, err
+	}
+	return n, nil
+}
+
+func GetTasksByAssignee(db *sqlx.DB, assignee string, limit, offset int64) ([][]byte, error) {
+	stat := `SELECT data FROM task
+WHERE (data->'assignees')::jsonb ? $1::text
+ORDER BY created DESC LIMIT $2 OFFSET $3`
+	return SelectJSONData(db, stat, assignee, limit, offset)
+}
