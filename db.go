@@ -9,6 +9,7 @@ import (
 var schema = `
 CREATE TABLE IF NOT EXISTS employee (
     id TEXT PRIMARY KEY,
+    created BIGINT,
     data JSONB
 );
 
@@ -16,6 +17,7 @@ CREATE INDEX on employee USING GIN (data);
 
 CREATE TABLE IF NOT EXISTS task (
     id TEXT PRIMARY KEY,
+    created BIGINT,
     data JSONB
 );
 

@@ -70,7 +70,7 @@ func CreateTask(db *sqlx.DB, t *TaskData) (string, error) {
 		ID  string
 	)
 
-	stat := `INSERT INTO task (id, data) VALUES ($1, $2)`
+	stat := `INSERT INTO task (id, created, data) VALUES ($1, $2, $3)`
 
 	if err = t.Valid(db); err != nil {
 		return "", err
@@ -80,13 +80,15 @@ func CreateTask(db *sqlx.DB, t *TaskData) (string, error) {
 		return "", err
 	}
 
-	newTask := Task{ID, time.Now().Unix(), t}
+	nanoSeconds := time.Now().UnixNano()
+
+	newTask := Task{ID, nanoSeconds, t}
 	jsonData, err := json.Marshal(newTask)
 	if err != nil {
 		return "", err
 	}
 
-	if _, err = db.Exec(stat, ID, string(jsonData)); err != nil {
+	if _, err = db.Exec(stat, ID, nanoSeconds, string(jsonData)); err != nil {
 		return "", err
 	}
 	return ID, nil

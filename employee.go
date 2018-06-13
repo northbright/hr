@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/northbright/uuid"
@@ -19,7 +20,8 @@ type EmployeeData struct {
 
 // Employee contains ID and full employee data.
 type Employee struct {
-	ID string `json:"id"`
+	ID      string `json:"id"`
+	Created int64  `json:"created"`
 	*EmployeeData
 }
 
@@ -87,7 +89,7 @@ func CreateEmployee(db *sqlx.DB, e *EmployeeData) (string, error) {
 		ID  string
 	)
 
-	stat := `INSERT INTO employee (id, data) VALUES ($1, $2)`
+	stat := `INSERT INTO employee (id, created, data) VALUES ($1, $2, $3)`
 
 	e.Sex = UpdateSex(e.Sex)
 	if err = e.Valid(); err != nil {
@@ -102,13 +104,15 @@ func CreateEmployee(db *sqlx.DB, e *EmployeeData) (string, error) {
 		return "", err
 	}
 
-	newEmployee := Employee{ID, e}
+	nanoSeconds := time.Now().UnixNano()
+
+	newEmployee := Employee{ID, nanoSeconds, e}
 	jsonData, err := json.Marshal(newEmployee)
 	if err != nil {
 		return "", err
 	}
 
-	if _, err = db.Exec(stat, ID, string(jsonData)); err != nil {
+	if _, err = db.Exec(stat, ID, nanoSeconds, string(jsonData)); err != nil {
 		return "", err
 	}
 	return ID, nil

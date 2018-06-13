@@ -15,6 +15,7 @@ func ExampleInitDB() {
 	user := "postgres"
 	dbname := "test"
 
+	log.Printf(`Make sure to run the command before test: psql -U postgres -c 'CREATE DATABASE test;'`)
 	psqlInfo := fmt.Sprintf("host=%v port=%v user=%v dbname=%v sslmode=disable",
 		host, port, user, dbname)
 
