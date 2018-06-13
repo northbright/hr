@@ -106,8 +106,19 @@ func RemoveAllTasks(db *sqlx.DB) error {
 	return err
 }
 
-func GetTasksByAssigner(db *sqlx.DB, assigner string) ([][]byte, error) {
-	stat := `SELECT data FROM task
+func GetTaskCountByAssigner(db *sqlx.DB, assigner string) (int64, error) {
+	var n int64
+	stat := `SELECT COUNT(*) FROM task
 WHERE data @> jsonb_build_object('assigner',$1::text)`
-	return SelectJSONData(db, stat, assigner)
+	if err := db.Get(&n, stat, assigner); err != nil {
+		return 0, err
+	}
+	return n, nil
+}
+
+func GetTasksByAssigner(db *sqlx.DB, assigner string, limit, offset int64) ([][]byte, error) {
+	stat := `SELECT data FROM task
+WHERE data @> jsonb_build_object('assigner',$1::text)
+ORDER BY created DESC LIMIT $2 OFFSET $3`
+	return SelectJSONData(db, stat, assigner, limit, offset)
 }

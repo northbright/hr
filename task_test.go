@@ -86,14 +86,24 @@ func ExampleCreateTask() {
 	}
 
 	// Get tasks by assigner.
-	jsonDataArr, err := hr.GetTasksByAssigner(db, IDs[0])
+	n, err := hr.GetTaskCountByAssigner(db, IDs[0])
 	if err != nil {
-		log.Printf("GetTasksByAssigner() error: %v", err)
+		log.Printf("GetTaskCountByAssigner() error: %v", err)
 		return
 	}
-	log.Printf("GetTasksByAssigner() OK.")
-	for _, data := range jsonDataArr {
-		log.Printf("JSON: %s\n", data)
+
+	limit := int64(2)
+	offset := int64(0)
+	for offset = 0; offset < n; offset += limit {
+		jsonDataArr, err := hr.GetTasksByAssigner(db, IDs[0], limit, offset)
+		if err != nil {
+			log.Printf("GetTasksByAssigner() error: %v", err)
+			return
+		}
+		log.Printf("GetTasksByAssigner() OK. LIMIT: %v, OFFSET: %v", limit, offset)
+		for _, data := range jsonDataArr {
+			log.Printf("JSON: %s\n", data)
+		}
 	}
 
 	// Output:
