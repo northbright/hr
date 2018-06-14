@@ -75,6 +75,25 @@ func ExampleCreateTask() {
 		log.Printf("CreateTask() OK. ID = %v, task: %v", ID, t)
 	}
 
+	// Create task comments
+	commentDatas := []hr.TaskCommentData{
+		hr.TaskCommentData{
+			Author:  IDs[0],
+			Content: "Please get this done ASAP.",
+		},
+		hr.TaskCommentData{
+			Author:  IDs[1],
+			Content: "I need 3 - 5 days.",
+		},
+	}
+
+	for _, comment := range commentDatas {
+		if err := hr.CreateTaskComment(db, taskIDs[0], &comment); err != nil {
+			log.Printf("CreateTaskComment() error: %v", err)
+			return
+		}
+	}
+
 	// Get task data by ID.
 	for _, ID := range taskIDs {
 		jsonData, err := hr.GetTask(db, ID)
