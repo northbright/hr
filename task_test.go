@@ -76,6 +76,7 @@ func ExampleCreateTask() {
 	}
 
 	// Create task comments
+
 	commentDatas := []hr.TaskCommentData{
 		hr.TaskCommentData{
 			Author:  IDs[0],

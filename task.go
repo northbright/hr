@@ -33,7 +33,7 @@ type Task struct {
 	ID      string `json:"id"`
 	Created int64  `json:"created"`
 	*TaskData
-	Comments []TaskComment `json:"comments"`
+	Comments []TaskComment `json:"comments,omitempty"`
 }
 
 var (
@@ -89,7 +89,7 @@ func CreateTask(db *sqlx.DB, t *TaskData) (string, error) {
 
 	nanoSeconds := time.Now().UnixNano()
 
-	newTask := Task{ID, nanoSeconds, t, []TaskComment{}}
+	newTask := Task{ID: ID, Created: nanoSeconds, TaskData: t}
 	jsonData, err := json.Marshal(newTask)
 	if err != nil {
 		return "", err
@@ -169,8 +169,8 @@ WHERE ID = $1`
 }
 
 func CreateTaskComment(db *sqlx.DB, taskID string, c *TaskCommentData) error {
-	stat := `UPDATE task SET data = jsonb_set(data, '{comments}', 
-COALESCE(data->'comments', '[]'::jsonb) || jsonb_build_array($1::jsonb), true)
+	stat := `UPDATE task SET data = jsonb_set(
+data, '{comments}', COALESCE(data->'comments', '[]'::jsonb) || jsonb_build_array($1::jsonb), true)
 WHERE id = $2`
 
 	if err := c.Valid(db); err != nil {
