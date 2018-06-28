@@ -21,10 +21,10 @@ type TaskComment struct {
 
 type TaskData struct {
 	Assigner  string   `json:"assigner"`
-	Assignees []string `json:"assignees"`
+	Assignees []string `json:"assignees,omitempty"`
 	Priority  int      `json:"priority"`
 	Closed    bool     `json:"closed"`
-	Tags      []string `json:"tags"`
+	Tags      []string `json:"tags,omitempty"`
 	Title     string   `json:"title"`
 	Content   string   `json:"content"`
 }
