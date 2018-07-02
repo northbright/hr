@@ -30,10 +30,10 @@ type TaskData struct {
 }
 
 type Task struct {
-	ID      string `json:"id"`
-	Created int64  `json:"created"`
-	*TaskData
+	ID       string        `json:"id"`
+	Created  int64         `json:"created"`
 	Comments []TaskComment `json:"comments,omitempty"`
+	*TaskData
 }
 
 var (
